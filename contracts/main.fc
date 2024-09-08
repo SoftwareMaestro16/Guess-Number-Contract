@@ -179,7 +179,6 @@ global int storage::is_guessed?;
 
 ;; (int) get_secret_number() method_id {
 ;;     load_data();
-;;     ;; return "it's not as easy as you think";
 ;;     return storage::secret_number;
 ;; }
 
