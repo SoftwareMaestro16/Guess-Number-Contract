@@ -1,0 +1,55 @@
+const int min_tons_for_storage = 200000000;
+
+() msg::send_bounce(slice sender, int msg_val) impure inline {
+    var msg = begin_cell()
+        .store_uint(0x10, 6)
+        .store_slice(sender) 
+        .store_coins(msg_val)
+        .store_uint(0, 107)
+    .end_cell();
+    send_raw_message(msg, 64);
+}
+
+() msg::send_is_guessed(slice sender, int msg_val) impure inline {
+    var msg = begin_cell()
+        .store_uint(0x10, 6)
+        .store_slice(sender) 
+        .store_coins(msg_val)
+        .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1 + 32)
+        .store_slice("The number has already been guessed!")
+    .end_cell();
+    send_raw_message(msg, 64);
+}
+
+;; () msg::send_error(slice sender, int msg_val) impure inline {
+;;     var msg = begin_cell()
+;;         .store_uint(0x10, 6)
+;;         .store_slice(sender) 
+;;         .store_coins(msg_val)
+;;         .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1 + 32)
+;;         .store_slice("😟 You didn't Guess. 😭")
+;;     .end_cell();
+;;     send_raw_message(msg, 64);
+;; }
+
+() msg::send_withdraw(slice sender) impure inline {
+    raw_reserve(min_tons_for_storage, 0);
+    var msg = begin_cell()
+                .store_uint(0x10, 6) 
+                .store_slice(sender)
+                .store_coins(0)
+                .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
+              .end_cell();
+    send_raw_message(msg, 128);
+}
+
+() msg::send_prize(slice sender, int msg_val) impure inline {
+    var msg = begin_cell()
+                .store_uint(0x10, 6) 
+                .store_slice(sender)
+                .store_coins(msg_val)
+                .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1 + 32)
+                .store_slice("🚀 You Won! 🎉")
+              .end_cell();
+    send_raw_message(msg, 64);
+}
